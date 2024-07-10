@@ -1,0 +1,3 @@
+testdir
+build/**/*
+.DS_Store

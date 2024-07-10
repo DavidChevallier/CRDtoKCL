@@ -1,0 +1,21 @@
+{
+    "moduleName": "crossplane",
+    "crds": {
+        "io_workflowtemplates": "https://raw.githubusercontent.com/argoproj/argo-workflows/main/manifests/base/crds/full/argoproj.io_workflowtemplates.yaml",
+        "compositeresourcedefinitions": "https://raw.githubusercontent.com/crossplane/crossplane/2a427fc89da4a2e86f75eaecfa8328f53e19f33b/cluster/crds/apiextensions.crossplane.io_compositeresourcedefinitions.yaml",
+        "compositionrevisions": "https://raw.githubusercontent.com/crossplane/crossplane/2a427fc89da4a2e86f75eaecfa8328f53e19f33b/cluster/crds/apiextensions.crossplane.io_compositionrevisions.yaml",
+        "compositions": "https://raw.githubusercontent.com/crossplane/crossplane/2a427fc89da4a2e86f75eaecfa8328f53e19f33b/cluster/crds/apiextensions.crossplane.io_compositions.yaml",
+        "environmentconfigs": "https://raw.githubusercontent.com/crossplane/crossplane/2a427fc89da4a2e86f75eaecfa8328f53e19f33b/cluster/crds/apiextensions.crossplane.io_environmentconfigs.yaml",
+        "usages": "https://raw.githubusercontent.com/crossplane/crossplane/2a427fc89da4a2e86f75eaecfa8328f53e19f33b/cluster/crds/apiextensions.crossplane.io_usages.yaml",
+        "configurationrevisions": "https://raw.githubusercontent.com/crossplane/crossplane/2a427fc89da4a2e86f75eaecfa8328f53e19f33b/cluster/crds/pkg.crossplane.io_configurationrevisions.yaml",
+        "configurations": "https://raw.githubusercontent.com/crossplane/crossplane/2a427fc89da4a2e86f75eaecfa8328f53e19f33b/cluster/crds/pkg.crossplane.io_configurations.yaml",
+        "controllerconfigs": "https://raw.githubusercontent.com/crossplane/crossplane/2a427fc89da4a2e86f75eaecfa8328f53e19f33b/cluster/crds/pkg.crossplane.io_controllerconfigs.yaml",
+        "deploymentruntimeconfigs": "https://raw.githubusercontent.com/crossplane/crossplane/2a427fc89da4a2e86f75eaecfa8328f53e19f33b/cluster/crds/pkg.crossplane.io_deploymentruntimeconfigs.yaml",
+        "functionrevisions": "https://raw.githubusercontent.com/crossplane/crossplane/2a427fc89da4a2e86f75eaecfa8328f53e19f33b/cluster/crds/pkg.crossplane.io_functionrevisions.yaml",
+        "functions": "https://raw.githubusercontent.com/crossplane/crossplane/2a427fc89da4a2e86f75eaecfa8328f53e19f33b/cluster/crds/pkg.crossplane.io_functions.yaml",
+        "locks": "https://raw.githubusercontent.com/crossplane/crossplane/2a427fc89da4a2e86f75eaecfa8328f53e19f33b/cluster/crds/pkg.crossplane.io_locks.yaml",
+        "providerrevisions": "https://raw.githubusercontent.com/crossplane/crossplane/2a427fc89da4a2e86f75eaecfa8328f53e19f33b/cluster/crds/pkg.crossplane.io_providerrevisions.yaml",
+        "providers": "https://raw.githubusercontent.com/crossplane/crossplane/2a427fc89da4a2e86f75eaecfa8328f53e19f33b/cluster/crds/pkg.crossplane.io_providers.yaml",
+        "storeconfigs": "https://raw.githubusercontent.com/crossplane/crossplane/2a427fc89da4a2e86f75eaecfa8328f53e19f33b/cluster/crds/secrets.crossplane.io_storeconfigs.yaml"
+    }
+}

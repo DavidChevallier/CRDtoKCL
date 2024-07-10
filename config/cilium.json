@@ -1,0 +1,27 @@
+{
+    "moduleName": "cilium",
+    "crds": {
+      "ciliumclusterwideenvoyconfigs.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2/ciliumclusterwideenvoyconfigs.yaml",
+      "ciliumclusterwidenetworkpolicies.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2/ciliumclusterwidenetworkpolicies.yaml",
+      "ciliumegressgatewaypolicies.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2/ciliumegressgatewaypolicies.yaml",
+      "ciliumendpoints.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2/ciliumendpoints.yaml",
+      "ciliumenvoyconfigs.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2/ciliumenvoyconfigs.yaml",
+      "ciliumexternalworkloads.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2/ciliumexternalworkloads.yaml",
+      "ciliumidentities.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2/ciliumidentities.yaml",
+      "ciliumlocalredirectpolicies.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2/ciliumlocalredirectpolicies.yaml",
+      "ciliumnetworkpolicies.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2/ciliumnetworkpolicies.yaml",
+      "ciliumnodeconfigs.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2/ciliumnodeconfigs.yaml",
+      "ciliumnodes.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2/ciliumnodes.yaml",
+      "ciliumbgpadvertisements.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2alpha1/ciliumbgpadvertisements.yaml",
+      "ciliumbgpclusterconfigs.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2alpha1/ciliumbgpclusterconfigs.yaml",
+      "ciliumbgpnodeconfigoverrides.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2alpha1/ciliumbgpnodeconfigoverrides.yaml",
+      "ciliumbgpnodeconfigs.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2alpha1/ciliumbgpnodeconfigs.yaml",
+      "ciliumbgppeerconfigs.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2alpha1/ciliumbgppeerconfigs.yaml",
+      "ciliumbgppeeringpolicies.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2alpha1/ciliumbgppeeringpolicies.yaml",
+      "ciliumcidrgroups.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2alpha1/ciliumcidrgroups.yaml",
+      "ciliumendpointslices.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2alpha1/ciliumendpointslices.yaml",
+      "ciliuml2announcementpolicies.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2alpha1/ciliuml2announcementpolicies.yaml",
+      "ciliumloadbalancerippools.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2alpha1/ciliumloadbalancerippools.yaml",
+      "ciliumpodippools.yaml": "https://raw.githubusercontent.com/cilium/cilium/99bf976/pkg/k8s/apis/cilium.io/client/crds/v2alpha1/ciliumpodippools.yaml"
+    }
+  }

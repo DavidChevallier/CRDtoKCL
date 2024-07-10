@@ -1,0 +1,8 @@
+{
+    "moduleName": "argo_cd",
+    "crds": {
+        "application-crd": "https://raw.githubusercontent.com/argoproj/argo-cd/master/manifests/crds/application-crd.yaml",
+        "applicationset-crd": "https://raw.githubusercontent.com/argoproj/argo-cd/master/manifests/crds/applicationset-crd.yaml",
+        "appproject-crd": "https://raw.githubusercontent.com/argoproj/argo-cd/master/manifests/crds/appproject-crd.yaml"
+    }
+}
