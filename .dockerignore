@@ -4,3 +4,4 @@ Dockerfile
 config/**/*
 .gitignore
 .git/**/*
+.DS_Store
