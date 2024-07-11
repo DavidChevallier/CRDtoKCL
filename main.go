@@ -5,7 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
-	"github.com/apoorvam/goterminal" //https://apoorvam.github.io/go-terminal
+	"github.com/apoorvam/goterminal" // https://apoorvam.github.io/go-terminal
 	"io"
 	"net/http"
 	"os"
@@ -15,13 +15,16 @@ import (
 	"strings"
 )
 
+// CRDFiles represents a map of file names to URLs of CRD files.
 type CRDFiles map[string]string
 
+// Config represents the configuration for the application.
 type Config struct {
 	ModuleName string   `json:"moduleName"`
 	CRDs       CRDFiles `json:"crds"`
 }
 
+// knownAPIVersions is a slice of strings that contains the known API versions.
 var knownAPIVersions = []string{
 	"v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10",
 	"v1alpha1", "v1alpha2", "v1alpha3", "v1alpha4", "v1alpha5",
@@ -32,8 +35,12 @@ var knownAPIVersions = []string{
 	"v3beta1", "v3beta2", "v3beta3", "v3beta4", "v3beta5",
 }
 
+// debug is a boolean variable that indicates whether debug mode is enabled or not.
 var debug bool
 
+// main is the entry point of the program. It parses command line flags, creates necessary directories,
+// loads configuration, downloads and converts CRDs, moves KCL files, removes empty directories,
+// and prints a success message.
 func main() {
 	rawURL := flag.String("url", "", "GitHub directory for raw links")
 	moduleName := flag.String("name", "", "Module name")
@@ -71,6 +78,30 @@ func main() {
 	fmt.Println("\033[32mAll tasks completed successfully.\033[0m")
 }
 
+// extractRawLinks fetches content from the specified URL, extracts raw links to YAML files,
+// and saves them to a JSON configuration file. It performs the following steps:
+// 1. Fetches the content from the URL.
+// 2. Parses the HTML and extracts the JSON data.
+// 3. Constructs the raw data URL.
+// 4. Finds the raw links to YAML files and stores them in a map.
+// 5. Creates a JSON configuration object with the module name and the raw links.
+// 6. Writes the JSON configuration to a file.
+// 7. Creates the necessary directories.
+// 8. Downloads the CRDs (Custom Resource Definitions) from the raw links.
+// 9. Converts the CRDs to Kubernetes YAML format.
+// 10. Moves the KCL (Kubernetes Configuration Language) files to the module directory.
+// 11. Removes any empty directories.
+// 12. Prints a success message.
+//
+// Parameters:
+// - url: The URL to fetch the content from.
+// - moduleName: The name of the module.
+//
+// Note: This function assumes that the URL contains HTML with a script tag containing
+// JSON data in the specified format.
+//
+// Example usage:
+// extractRawLinks("https://example.com", "Module")
 func extractRawLinks(url string, moduleName string) {
 	if debug {
 		fmt.Printf("\033[33mDebug: Fetching content from: %s\033[0m\n", url)
@@ -168,9 +199,17 @@ func extractRawLinks(url string, moduleName string) {
 	removeEmptyDirs(moduleDir)
 
 	writer.Reset()
-	fmt.Println("\033[32mAll tasks completed successfully.\033[0m")
+	fmt.Println("\033[32mAll tasks completed successfully.\033{0m")
 }
 
+// loadConfig loads the configuration from the specified file path.
+// It returns the loaded configuration or exits the program with an error message if the file is not found or if there is an error decoding the JSON.
+//
+// Parameters:
+// - filePath: The path to the JSON configuration file.
+//
+// Returns:
+// - Config: The loaded configuration.
 func loadConfig(filePath string) Config {
 	file, err := os.Open(filePath)
 	if err != nil {
@@ -189,6 +228,13 @@ func loadConfig(filePath string) Config {
 	return config
 }
 
+// downloadCRDs downloads CRD files from the given URLs and saves them in the specified base directory.
+// It displays progress messages using the provided writer.
+//
+// Parameters:
+// - crdFiles: A map of CRD file names to URLs.
+// - baseDir: The base directory where the CRD files will be saved.
+// - writer: A writer for displaying progress messages.
 func downloadCRDs(crdFiles CRDFiles, baseDir string, writer *goterminal.Writer) {
 	for key, url := range crdFiles {
 		filePath := filepath.Join(baseDir, "crds", key+".yaml")
@@ -204,6 +250,16 @@ func downloadCRDs(crdFiles CRDFiles, baseDir string, writer *goterminal.Writer) 
 	}
 }
 
+// convertCRDs converts the CRD files to a different format and saves them in the corresponding output directory.
+// It takes a map of CRD files, the base directory, and a writer for displaying output messages.
+// For each CRD file, it determines the API version, creates the output directory if it doesn't exist,
+// and converts the file using the "kcl" command-line tool. If any error occurs during the conversion,
+// an error message is displayed and the program exits with a non-zero status code.
+//
+// Parameters:
+// - crdFiles: A map of CRD file names to URLs.
+// - baseDir: The base directory where the converted files will be saved.
+// - writer: A writer for displaying progress messages.
 func convertCRDs(crdFiles CRDFiles, baseDir string, writer *goterminal.Writer) {
 	for key := range crdFiles {
 		inputFile := filepath.Join(baseDir, "crds", key+".yaml")
@@ -230,6 +286,18 @@ func convertCRDs(crdFiles CRDFiles, baseDir string, writer *goterminal.Writer) {
 	}
 }
 
+// moveKclFiles moves files with the ".k" extension to a directory based on their API version.
+// It walks through the specified base directory and for each file with the ".k" extension,
+// it determines the API version based on the file name and moves the file to a subdirectory
+// named after the API version. If the API version cannot be determined, the file is moved
+// to a subdirectory named "unknown_api_version".
+//
+// Parameters:
+// - baseDir: The base directory to search for files.
+// - writer: A pointer to a goterminal.Writer for displaying output messages.
+//
+// Example:
+// moveKclFiles("/path/to/directory", writer)
 func moveKclFiles(baseDir string, writer *goterminal.Writer) {
 	err := filepath.Walk(baseDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -253,7 +321,7 @@ func moveKclFiles(baseDir string, writer *goterminal.Writer) {
 			writer.Print()
 			err = os.Rename(path, newPath)
 			if err != nil {
-				fmt.Fprintf(writer, "\033[31mError: Failed to move file '%s': %v\033[0m\n", path, err)
+				fmt.Fprintf(writer, "\033[31mError: Failed to move file '%s': %v\033{0m\n", path, err)
 				writer.Print()
 			}
 			writer.Clear()
@@ -268,6 +336,16 @@ func moveKclFiles(baseDir string, writer *goterminal.Writer) {
 	removeRedundantRegexMatch(baseDir, writer)
 }
 
+// removeRedundantRegexMatch removes redundant occurrences of the string "regex_match = regex.match" from files in the specified directory.
+// It takes the base directory path and a writer for displaying error and debug messages as input.
+// The function iterates over known API versions and searches for files with the ".k" extension in each version's directory.
+// If a file contains the string "regex_match = regex.match" and it is not the first occurrence in the directory, the function removes it from the file.
+// If an error occurs while reading or writing a file, an error message is displayed using the provided writer.
+// If the debug flag is enabled, a debug message is displayed when the string is successfully removed from a file.
+//
+// Parameters:
+// - baseDir: The base directory to search for files.
+// - writer: A writer for displaying error and debug messages.
 func removeRedundantRegexMatch(baseDir string, writer *goterminal.Writer) {
 	for _, apiVersion := range knownAPIVersions {
 		dirPath := filepath.Join(baseDir, apiVersion)
@@ -307,6 +385,17 @@ func removeRedundantRegexMatch(baseDir string, writer *goterminal.Writer) {
 	}
 }
 
+// removeEmptyDirs removes all empty directories within the specified directory.
+// It recursively walks through the directory and checks if each directory is empty.
+// If an empty directory is found, it is removed. The function stops when there are no more empty directories left.
+//
+// Parameters:
+// - dir: The directory path to start the search from.
+//
+// Example usage:
+// removeEmptyDirs("/path/to/directory")
+//
+// Note: This function does not handle errors related to directory traversal or removal.
 func removeEmptyDirs(dir string) {
 	for {
 		var emptyDirs []string
@@ -343,6 +432,14 @@ func removeEmptyDirs(dir string) {
 	}
 }
 
+// downloadFile downloads a file from the specified URL and saves it to the given filepath.
+//
+// Parameters:
+// - filepath: The path where the file will be saved.
+// - url: The URL to download the file from.
+//
+// Returns:
+// - error: An error if the download or file creation fails, nil otherwise.
 func downloadFile(filepath string, url string) error {
 	resp, err := http.Get(url)
 	if err != nil {
@@ -360,6 +457,17 @@ func downloadFile(filepath string, url string) error {
 	return err
 }
 
+// runCommand executes the specified command with the given arguments.
+// It redirects the command's standard output and standard error based on the value of the `debug` variable.
+// If `debug` is true, the output is printed to the console. Otherwise, it is discarded.
+// If the command fails to run, an error is returned.
+//
+// Parameters:
+// - name: The name of the command to run.
+// - arg: The arguments for the command.
+//
+// Returns:
+// - error: An error if the command execution fails, nil otherwise.
 func runCommand(name string, arg ...string) error {
 	cmd := exec.Command(name, arg...)
 	if debug {
@@ -376,6 +484,21 @@ func runCommand(name string, arg ...string) error {
 	return nil
 }
 
+// extractAPIVersionFromName extracts the API version from the given name string.
+// It searches for a pattern in the name string and returns the extracted API version.
+// If the API version is found and is known (present in the knownAPIVersions slice),
+// it returns the API version string. Otherwise, it returns "unknown_api_version".
+//
+// Parameters:
+// - name: The name string to extract the API version from.
+// - knownAPIVersions: A slice of known API versions.
+//
+// Returns:
+// - string: The extracted API version or "unknown_api_version" if not found.
+// - error: An error if the extraction fails.
+//
+// Example usage:
+// version, err := extractAPIVersionFromName("example_v1alpha1", knownAPIVersions)
 func extractAPIVersionFromName(name string, knownAPIVersions []string) (string, error) {
 	if debug {
 		fmt.Printf("\033[33mDebug: Checking name '%s' for API version...\033[0m\n", name)
@@ -404,6 +527,20 @@ func extractAPIVersionFromName(name string, knownAPIVersions []string) (string, 
 	return "unknown_api_version", nil
 }
 
+// isEmptyDir checks if a directory is empty.
+// It takes a string parameter `name` representing the directory path.
+// It returns a boolean value indicating whether the directory is empty or not,
+// and an error if any occurred during the process.
+//
+// Parameters:
+// - name: The path of the directory to check.
+//
+// Returns:
+// - bool: True if the directory is empty, false otherwise.
+// - error: An error if the directory cannot be read.
+//
+// Example usage:
+// empty, err := isEmptyDir("/path/to/directory")
 func isEmptyDir(name string) (bool, error) {
 	f, err := os.Open(name)
 	if err != nil {
