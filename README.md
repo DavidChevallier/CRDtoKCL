@@ -4,29 +4,27 @@
 
 ```bash
 git clone git@github.com:DavidChevallier/CRDtoKCL.git
-cd 
-go build -o  main.go
 ```
 
-## Verwendung
+## Usage
 
-### 1. GitHub URL und Modulname
+### 1. GitHub URL and Module Name
 
 ```bash
 ./ -url <GitHub-URL> -name <Modulname> [-debug]
 ```
 
-- `-url`: die GitHub URL des Verzeichnisses
-- `-name`: Name von Moduls.
-- `-debug`: Debugfoo
+- `-url`: The GitHub URL of the directory.
+- `-name`: Name of the module.
+- `-debug`: Enable debugging.
 
-**Beispiel:**
+**Example:**
 
 ```bash
 go run . -name "traefik" -url "https://github.com/traefik/traefik-helm-chart/tree/master/traefik/crds" -debug
 ```
 
-### 2. Verwendung mit einer config
+### 2. Usage with a config file
 
 ```bash
 go run . -config <Pfad zur JSON config> [-debug]
@@ -35,7 +33,7 @@ go run . -config <Pfad zur JSON config> [-debug]
 - `-config`
 - `-debug`
 
-**Beispiel:**
+**Example:**
 
 ```bash
 go run . -config config.json -debug
