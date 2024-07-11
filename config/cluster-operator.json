@@ -1,9 +1,0 @@
-{
-    "moduleName": "cluster-operator",
-    "crds": {
-        "rabbitmq.com_rabbitmqclusters.yaml": "https://raw.githubusercontent.com/rabbitmq/cluster-operator/main/config/crd/bases/rabbitmq.com_rabbitmqclusters.yaml",
-        "crd_labels_patch.yaml": "https://raw.githubusercontent.com/rabbitmq/cluster-operator/main/config/crd/patches/crd_labels_patch.yaml",
-        "kustomization.yaml": "https://raw.githubusercontent.com/rabbitmq/cluster-operator/main/config/crd/kustomization.yaml",
-        "kustomizeconfig.yaml": "https://raw.githubusercontent.com/rabbitmq/cluster-operator/main/config/crd/kustomizeconfig.yaml"
-    }
-}
