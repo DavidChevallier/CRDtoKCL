@@ -43,6 +43,9 @@ func main() {
 
 	debug = *debugFlag
 
+	os.MkdirAll("modules", os.ModePerm)
+	os.MkdirAll("config", os.ModePerm)
+
 	if *rawURL != "" && *moduleName != "" {
 		extractRawLinks(*rawURL, *moduleName)
 		return
