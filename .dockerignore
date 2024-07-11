@@ -1,6 +1,6 @@
-modules/**/*
-config/**/*
-.git/**/*
 README.md
-.gitignore
+modules/**/*
 Dockerfile
+config/**/*
+.gitignore
+.git/**/*
