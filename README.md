@@ -50,3 +50,19 @@ go run . -config config.json -debug
     }
 }
 ```
+
+## Build Multiarch Docker Container
+
+[docker.com](https://hub.docker.com/repository/docker/dchevallier/crdtokcl/)
+
+```bash
+docker buildx build --no-cache --platform linux/amd64,linux/arm64 -t dchevallier/crdtokcl:latest -t dchevallier/crdtokcl:v1.0.0 . --push
+```
+
+### Use crdtokcl Docker Container in ZSH
+
+```bash
+function crdtokcl() {
+    docker run --rm -v $(pwd):/app dchevallier/crdtokcl:latest "$@"
+}
+```

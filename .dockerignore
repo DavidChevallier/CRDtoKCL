@@ -1,0 +1,6 @@
+modules/**/*
+config/**/*
+.git/**/*
+README.md
+.gitignore
+Dockerfile
