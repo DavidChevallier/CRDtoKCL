@@ -1,6 +1,0 @@
-{
-    "moduleName": "longhorn",
-    "crds": {
-        "longhorn": "https://raw.githubusercontent.com/longhorn/longhorn/master/chart/templates/crds.yaml"
-    }
-}
