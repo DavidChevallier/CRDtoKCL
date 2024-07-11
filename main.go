@@ -35,10 +35,10 @@ var knownAPIVersions = []string{
 var debug bool
 
 func main() {
-	rawURL := flag.String("url", "", "GitHub Verzeichnis für Raw die Links")
-	moduleName := flag.String("name", "", "Modulname")
-	configFile := flag.String("config", "", "Pfad zur JSON config")
-	debugFlag := flag.Bool("debug", false, "Aktivieren der Debugging-Funktion")
+	rawURL := flag.String("url", "", "GitHub directory for raw links")
+	moduleName := flag.String("name", "", "Module name")
+	configFile := flag.String("config", "", "Path to JSON config")
+	debugFlag := flag.Bool("debug", false, "Enable debugging")
 	flag.Parse()
 
 	debug = *debugFlag
@@ -49,7 +49,7 @@ func main() {
 	}
 
 	if *configFile == "" {
-		fmt.Println("\033[31mDavid sagt: ahjöö! Da hast du den Konfigurationspfad vergessen.\033[0m")
+		fmt.Println("\033[31mError: Configuration path is missing.\033[0m")
 		os.Exit(1)
 	}
 
@@ -65,35 +65,35 @@ func main() {
 	removeEmptyDirs(moduleDir)
 
 	writer.Reset()
-	fmt.Println("\033[32mDavid sagt: tiptop, Alles erledigt\033[0m")
+	fmt.Println("\033[32mAll tasks completed successfully.\033[0m")
 }
 
 func extractRawLinks(url string, moduleName string) {
 	if debug {
-		fmt.Printf("\033[33mDebug: David sagt: Ich hol's mir das zeug von: %s\033[0m\n", url)
+		fmt.Printf("\033[33mDebug: Fetching content from: %s\033[0m\n", url)
 	}
 
 	resp, err := http.Get(url)
 	if err != nil {
-		fmt.Printf("\033[31mDavid sagt: Da hast du einen URL Fehler gemacht: %v\033[0m\n", err)
+		fmt.Printf("\033[31mError: Failed to fetch URL: %v\033[0m\n", err)
 		return
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		fmt.Printf("\033[31mDavid sagt: ahjöö! Anfrage fehlgeschlagen und nu?: %s\033[0m\n", resp.Status)
+		fmt.Printf("\033[31mError: Request failed: %s\033[0m\n", resp.Status)
 		return
 	}
 
 	doc, err := goquery.NewDocumentFromReader(resp.Body)
 	if err != nil {
-		fmt.Printf("\033[31mDavid sagt: Das HTML ist im eimer 🪣! Fehler beim Lesen: %v\033[0m\n", err)
+		fmt.Printf("\033[31mError: Failed to read HTML: %v\033[0m\n", err)
 		return
 	}
 
 	script := doc.Find("script[type=\"application/json\"][data-target=\"react-app.embeddedData\"]").First()
 	if script.Length() == 0 {
-		fmt.Println("\033[31mDavid sagt: ist das ne JSON o.O? nope!\033[0m")
+		fmt.Println("\033[31mError: JSON data not found.\033[0m")
 		return
 	}
 
@@ -111,7 +111,7 @@ func extractRawLinks(url string, moduleName string) {
 
 	err = json.Unmarshal([]byte(jsonData), &payload)
 	if err != nil {
-		fmt.Printf("\033[31mDavid sagt: JSON Parsing foobar fooo: %v\033[0m\n", err)
+		fmt.Printf("\033[31mError: Failed to parse JSON: %v\033[0m\n", err)
 		return
 	}
 
@@ -119,7 +119,7 @@ func extractRawLinks(url string, moduleName string) {
 	baseRawURL = strings.Replace(baseRawURL, "/tree/", "/", 1)
 
 	if debug {
-		fmt.Printf("\033[33mDebug: David sagt: Das ist die URL für Raw data: %s\033[0m\n", baseRawURL)
+		fmt.Printf("\033[33mDebug: Raw data URL: %s\033[0m\n", baseRawURL)
 	}
 
 	crds := make(map[string]string)
@@ -128,7 +128,7 @@ func extractRawLinks(url string, moduleName string) {
 			rawLink := baseRawURL + "/" + item.Name
 			crds[item.Name] = rawLink
 			if debug {
-				fmt.Printf("\033[33mDebug: David sagt: ick hab da nen Raw Link gefunden: %s\033[0m\n", rawLink)
+				fmt.Printf("\033[33mDebug: Found raw link: %s\033[0m\n", rawLink)
 			}
 		}
 	}
@@ -140,18 +140,18 @@ func extractRawLinks(url string, moduleName string) {
 
 	configJSON, err := json.MarshalIndent(config, "", "    ")
 	if err != nil {
-		fmt.Printf("\033[31mDavid sagt: Konnte die JSON nicht erstellen! tja pech... %v\033[0m\n", err)
+		fmt.Printf("\033[31mError: Failed to create JSON: %v\033[0m\n", err)
 		return
 	}
 
 	configFilePath := filepath.Join("config", moduleName+".json")
 	err = os.WriteFile(configFilePath, configJSON, 0644)
 	if err != nil {
-		fmt.Printf("\033[31mDavid sagt: Konnte die JSON-Datei nicht schreiben: %v\033[0m\n", err)
+		fmt.Printf("\033[31mError: Failed to write JSON file: %v\033[0m\n", err)
 		return
 	}
 
-	fmt.Printf("\033[32mDavid sagt: JSON-Konfiguration gespeichert in %s\033[0m\n", configFilePath)
+	fmt.Printf("\033[32mJSON configuration saved to %s\033[0m\n", configFilePath)
 
 	config = loadConfig(configFilePath)
 	moduleDir := filepath.Join("modules", config.ModuleName)
@@ -165,13 +165,13 @@ func extractRawLinks(url string, moduleName string) {
 	removeEmptyDirs(moduleDir)
 
 	writer.Reset()
-	fmt.Println("\033[32mDavid sagt: tiptop, Alles erledigt\033[0m")
+	fmt.Println("\033[32mAll tasks completed successfully.\033[0m")
 }
 
 func loadConfig(filePath string) Config {
 	file, err := os.Open(filePath)
 	if err != nil {
-		fmt.Printf("\033[31mDavid sagt: Datei nicht gefunden: %s. watt nu! %v\033[0m\n", filePath, err)
+		fmt.Printf("\033[31mError: File not found: %s. %v\033[0m\n", filePath, err)
 		os.Exit(1)
 	}
 	defer file.Close()
@@ -179,7 +179,7 @@ func loadConfig(filePath string) Config {
 	var config Config
 	err = json.NewDecoder(file).Decode(&config)
 	if err != nil {
-		fmt.Printf("\033[31mDavid sagt: ick konnte die JSON nicht Dekodierung 🤷🏽‍♂️ %s! %v\033[0m\n", filePath, err)
+		fmt.Printf("\033[31mError: Failed to decode JSON: %s! %v\033[0m\n", filePath, err)
 		os.Exit(1)
 	}
 
@@ -189,11 +189,11 @@ func loadConfig(filePath string) Config {
 func downloadCRDs(crdFiles CRDFiles, baseDir string, writer *goterminal.Writer) {
 	for key, url := range crdFiles {
 		filePath := filepath.Join(baseDir, "crds", key+".yaml")
-		fmt.Fprintf(writer, "\033[34mDavid sagt: Ich lade %s von %s herunter...\033[0m\n", key, url)
+		fmt.Fprintf(writer, "\033[34mDownloading %s from %s...\033[0m\n", key, url)
 		writer.Print()
 		err := downloadFile(filePath, url)
 		if err != nil {
-			fmt.Fprintf(writer, "\033[31mDavid sagt: Ick hab da nen Download Fehler bei %s. Was hast du da für foo gemacht? %v\033[0m\n", url, err)
+			fmt.Fprintf(writer, "\033[31mError: Download failed for %s: %v\033[0m\n", url, err)
 			writer.Print()
 			os.Exit(1)
 		}
@@ -206,20 +206,20 @@ func convertCRDs(crdFiles CRDFiles, baseDir string, writer *goterminal.Writer) {
 		inputFile := filepath.Join(baseDir, "crds", key+".yaml")
 		apiVersion, err := extractAPIVersionFromName(key, knownAPIVersions)
 		if err != nil {
-			fmt.Fprintf(writer, "\033[31mDavid sagt: hmmm Version welche version? lol %s! %v\033[0m\n", inputFile, err)
+			fmt.Fprintf(writer, "\033[31mError: Failed to determine version for %s: %v\033[0m\n", inputFile, err)
 			writer.Print()
-			apiVersion = "unbekannte_api_version"
+			apiVersion = "unknown_api_version"
 		}
 
 		outputDir := filepath.Join(baseDir, apiVersion)
 		os.MkdirAll(outputDir, os.ModePerm)
 		outputFile := filepath.Join(outputDir, key+".k")
 
-		fmt.Fprintf(writer, "\033[34mDavid sagt: Konvertiere %s nach %s...\033[0m\n", inputFile, outputFile)
+		fmt.Fprintf(writer, "\033[34mConverting %s to %s...\033[0m\n", inputFile, outputFile)
 		writer.Print()
 		err = runCommand("kcl", "import", "-m", "crd", inputFile, "-o", outputFile)
 		if err != nil {
-			fmt.Fprintf(writer, "\033[31mDavid sagt: Konvertierungsfehler bei %s! %v\033[0m\n", inputFile, err)
+			fmt.Fprintf(writer, "\033[31mError: Conversion failed for %s: %v\033[0m\n", inputFile, err)
 			writer.Print()
 			os.Exit(1)
 		}
@@ -236,21 +236,21 @@ func moveKclFiles(baseDir string, writer *goterminal.Writer) {
 			apiVersion, err := extractAPIVersionFromName(info.Name(), knownAPIVersions)
 			if err != nil {
 				if debug {
-					fmt.Fprintf(writer, "\033[33mDebug: David sagt: Versionsbestimmung gescheitert bei '%s': %v\033[0m\n", info.Name(), err)
+					fmt.Fprintf(writer, "\033[33mDebug: Failed to determine version for '%s': %v\033[0m\n", info.Name(), err)
 					writer.Print()
 				}
-				apiVersion = "unbekannte_api_version"
+				apiVersion = "unknown_api_version"
 			}
 
 			newDir := filepath.Join(baseDir, apiVersion)
 			os.MkdirAll(newDir, os.ModePerm)
 
 			newPath := filepath.Join(newDir, info.Name())
-			fmt.Fprintf(writer, "\033[34mDavid sagt: Verschiebe %s nach %s...\033[0m\n", path, newPath)
+			fmt.Fprintf(writer, "\033[34mMoving %s to %s...\033[0m\n", path, newPath)
 			writer.Print()
 			err = os.Rename(path, newPath)
 			if err != nil {
-				fmt.Fprintf(writer, "\033[31mDavid sagt: konnte die Datei nicht verschieben '%s'! %v\033[0m\n", path, err)
+				fmt.Fprintf(writer, "\033[31mError: Failed to move file '%s': %v\033[0m\n", path, err)
 				writer.Print()
 			}
 			writer.Clear()
@@ -258,7 +258,7 @@ func moveKclFiles(baseDir string, writer *goterminal.Writer) {
 		return nil
 	})
 	if err != nil {
-		fmt.Printf("\033[31mDavid sagt: Beim Verschieben ist etwas schief gelaufen: %v\033[0m\n", err)
+		fmt.Printf("\033[31mError: Failed to move files: %v\033[0m\n", err)
 		os.Exit(1)
 	}
 
@@ -287,11 +287,11 @@ func removeRedundantRegexMatch(baseDir string, writer *goterminal.Writer) {
 						newContent := strings.Replace(string(fileContent), "regex_match = regex.match", "", 1)
 						err = os.WriteFile(filePath, []byte(newContent), 0644)
 						if err != nil {
-							fmt.Fprintf(writer, "\033[31mDavid sagt: Fehler beim Schreiben der Datei '%s'! %v\033[0m\n", filePath, err)
+							fmt.Fprintf(writer, "\033[31mError: Failed to write file '%s': %v\033[0m\n", filePath, err)
 							writer.Print()
 						} else {
 							if debug {
-								fmt.Fprintf(writer, "\033[33mDebug: David sagt: Entferne 'regex_match = regex.match' aus '%s'\033[0m\n", filePath)
+								fmt.Fprintf(writer, "\033[33mDebug: Removed 'regex_match = regex.match' from '%s'\033[0m\n", filePath)
 								writer.Print()
 							}
 						}
@@ -330,11 +330,11 @@ func removeEmptyDirs(dir string) {
 
 		for i := len(emptyDirs) - 1; i >= 0; i-- {
 			if debug {
-				fmt.Printf("\033[33mDebug: David sagt: da haste ein Leeres Verzeichnis '%s' ick vernichte es nu höhöhö...\033[0m\n", emptyDirs[i])
+				fmt.Printf("\033[33mDebug: Removing empty directory '%s'...\033[0m\n", emptyDirs[i])
 			}
 			err := os.Remove(emptyDirs[i])
 			if err != nil {
-				fmt.Printf("\033[31mDavid sagt: Löschfehler bei Verzeichnis '%s'! %v\033[0m\n", emptyDirs[i], err)
+				fmt.Printf("\033[31mError: Failed to remove directory '%s': %v\033[0m\n", emptyDirs[i], err)
 			}
 		}
 	}
@@ -368,14 +368,14 @@ func runCommand(name string, arg ...string) error {
 	}
 	err := cmd.Run()
 	if err != nil {
-		return fmt.Errorf("fehler beim Ausführen des Befehls %s: %w", name, err)
+		return fmt.Errorf("error running command %s: %w", name, err)
 	}
 	return nil
 }
 
 func extractAPIVersionFromName(name string, knownAPIVersions []string) (string, error) {
 	if debug {
-		fmt.Printf("\033[33mDebug: Prüfe den Namen '%s' auf API Version...\033[0m\n", name)
+		fmt.Printf("\033[33mDebug: Checking name '%s' for API version...\033[0m\n", name)
 	}
 
 	re := regexp.MustCompile(`_v([0-9a-zA-Z]+)`)
@@ -383,12 +383,12 @@ func extractAPIVersionFromName(name string, knownAPIVersions []string) (string, 
 	if len(matches) > 1 {
 		apiVersion := "v" + matches[1]
 		if debug {
-			fmt.Printf("\033[33mDebug: Gefundene API Version: '%s'\033[0m\n", apiVersion)
+			fmt.Printf("\033[33mDebug: Found API version: '%s'\033[0m\n", apiVersion)
 		}
 		for _, v := range knownAPIVersions {
 			if apiVersion == v {
 				if debug {
-					fmt.Printf("\033[33mDebug: API-Version '%s' ist bekannt\033[0m\n", apiVersion)
+					fmt.Printf("\033[33mDebug: API version '%s' is known\033[0m\n", apiVersion)
 				}
 				return apiVersion, nil
 			}
@@ -396,9 +396,9 @@ func extractAPIVersionFromName(name string, knownAPIVersions []string) (string, 
 	}
 
 	if debug {
-		fmt.Printf("\033[33mDebug: Keine bekannte Version im Namen '%s' gefunden tja... so ist das halt\033[0m\n", name)
+		fmt.Printf("\033[33mDebug: No known version found in name '%s'\033[0m\n", name)
 	}
-	return "unbekannte_api_version", nil
+	return "unknown_api_version", nil
 }
 
 func isEmptyDir(name string) (bool, error) {
